@@ -1,7 +1,8 @@
+import java.util.Set;
+
 public class TabuVRP {
 
-    public void route() {
-
+    public String route(Set<Vehicle> vehicles, Set<Client> clients) {
+        return null;
     }
-
 }

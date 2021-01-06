@@ -9,13 +9,28 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader file = getInputFile();
 
-        Integer numberOfVehicles = Integer.valueOf(file.readLine());
-        Integer vehicleCapacity = Integer.valueOf(file.readLine());
+        Set<Vehicle> vehicles = initializeVehicles(file);
         Set<Client> clients = getClients(file);
+
+        for (Vehicle vehicle : vehicles) {
+            System.out.println(vehicle.getCapacity());
+        }
 
         for (Client client : clients) {
             System.out.println(client.getName() + ", " + client.getDemand());
         }
+
+        System.out.println(new TabuVRP().route(vehicles, clients));
+    }
+
+    private static Set<Vehicle> initializeVehicles(BufferedReader file) throws IOException {
+        Set<Vehicle> vehicles = new HashSet<>();
+        int numberOfVehicles = Integer.parseInt(file.readLine());
+        int vehicleCapacity = Integer.parseInt(file.readLine());
+        for (int i = 0; i < numberOfVehicles; i++) {
+            vehicles.add(new Vehicle(vehicleCapacity));
+        }
+        return vehicles;
     }
 
     private static Set<Client> getClients(BufferedReader file) throws IOException {
@@ -23,7 +38,7 @@ public class Main {
         String line = file.readLine();
         while (line != null) {
             String[] clientData = line.split(",");
-            clients.add(new Client(clientData[0], Integer.valueOf(clientData[1]), Double.valueOf(clientData[2]), Double.valueOf(clientData[3])));
+            clients.add(new Client(clientData[0], Integer.valueOf(clientData[1]), Double.parseDouble(clientData[2]), Double.parseDouble(clientData[3])));
             line = file.readLine();
         }
         return clients;
@@ -32,7 +47,7 @@ public class Main {
     private static BufferedReader getInputFile() throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Input file: ");
-        String filename = scanner.next();
-        return new BufferedReader(new FileReader(filename));
+        String fileName = scanner.next();
+        return new BufferedReader(new FileReader(fileName));
     }
 }
