@@ -1,14 +1,14 @@
 public class Client {
     private final String name;
     private final Integer demand;
-    private final Double latitude;
-    private final Double longitude;
+    private final double latitude;
+    private final double longitude;
 
-    public Client(String name, Integer demand, Double latitude, Double longitude) {
+    public Client(String name, Integer demand, double latitude, double longitude) {
         this.name = name;
         this.demand = demand;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.latitude = latitude * Math.PI / 180;
+        this.longitude = longitude * Math.PI / 180;
     }
 
     public String getName() {
@@ -19,11 +19,7 @@ public class Client {
         return demand;
     }
 
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
+    public Double getDistanceTo(Client client) {
+        return 6377.830272 * Math.acos((Math.sin(this.latitude) * Math.sin(client.latitude)) + Math.cos(this.latitude) * Math.cos(client.latitude) * Math.cos(client.longitude - this.longitude));
     }
 }
