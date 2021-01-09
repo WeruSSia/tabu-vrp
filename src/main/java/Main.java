@@ -11,6 +11,7 @@ public class Main {
 
         Set<Vehicle> vehicles = initializeVehicles(file);
         Set<Client> clients = getClients(file);
+        double[][] distanceMatrix = createDistanceMatrix(clients);
 
         for (Vehicle vehicle : vehicles) {
             System.out.println(vehicle.getCapacity());
@@ -18,6 +19,13 @@ public class Main {
 
         for (Client client : clients) {
             System.out.println(client.getName() + ", " + client.getDemand());
+        }
+
+        for (int i = 0; i < distanceMatrix.length; i++) {
+            for (int j = 0; j < distanceMatrix.length; j++) {
+                System.out.print(distanceMatrix[i][j] + " ");
+            }
+            System.out.println();
         }
 
         System.out.println(new TabuVRP().route(vehicles, clients));
@@ -49,5 +57,16 @@ public class Main {
         System.out.println("Input file: ");
         String fileName = scanner.next();
         return new BufferedReader(new FileReader(fileName));
+    }
+
+    private static double[][] createDistanceMatrix(Set<Client> clients) {
+        List<Client> clientsList = new ArrayList<>(clients);
+        double[][] distanceMatrix = new double[clients.size()][clients.size()];
+        for (int i = 0; i < clientsList.size(); i++) {
+            for (int j = 0; j < clientsList.size(); j++) {
+                distanceMatrix[i][j] = clientsList.get(i).getDistanceTo(clientsList.get(j));
+            }
+        }
+        return distanceMatrix;
     }
 }
