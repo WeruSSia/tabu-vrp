@@ -1,3 +1,6 @@
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class Client {
     private final Integer id;
     private final String name;
@@ -26,6 +29,6 @@ public class Client {
     }
 
     public Double getDistanceTo(Client client) {
-        return 6377.830272 * Math.acos((Math.sin(this.latitude) * Math.sin(client.latitude)) + Math.cos(this.latitude) * Math.cos(client.latitude) * Math.cos(client.longitude - this.longitude));
+        return BigDecimal.valueOf(6377.830272 * Math.acos((Math.sin(this.latitude) * Math.sin(client.latitude)) + Math.cos(this.latitude) * Math.cos(client.latitude) * Math.cos(client.longitude - this.longitude))).setScale(2, RoundingMode.HALF_EVEN).doubleValue();
     }
 }
