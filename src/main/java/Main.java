@@ -13,19 +13,8 @@ public class Main {
         List<Client> clients = getClients(file);
         double[][] distanceMatrix = createDistanceMatrix(clients);
 
-        for (Vehicle vehicle : vehicles) {
-            System.out.println(vehicle.getCapacity());
-        }
-
         for (Client client : clients) {
             System.out.println(client.getId().toString() + ", " + client.getName() + ", " + client.getDemand());
-        }
-
-        for (int i = 0; i < distanceMatrix.length; i++) {
-            for (int j = 0; j < distanceMatrix.length; j++) {
-                System.out.print(distanceMatrix[i][j] + " ");
-            }
-            System.out.println();
         }
 
         TabuVRP tabuVrpInstance = new TabuVRP(vehicles, clients, distanceMatrix);
@@ -45,10 +34,9 @@ public class Main {
     private static List<Client> getClients(BufferedReader file) throws IOException {
         List<Client> clients = new ArrayList<>();
         String line = file.readLine();
-        Integer id = 0;
+        int id = 0;
         while (line != null) {
             String[] clientData = line.split(",");
-            System.out.println(clientData[0]);
             clients.add(new Client(id++, clientData[0], Integer.valueOf(clientData[1]), Double.parseDouble(clientData[2]), Double.parseDouble(clientData[3])));
             line = file.readLine();
         }
@@ -63,14 +51,13 @@ public class Main {
     }
 
     private static double[][] createDistanceMatrix(List<Client> clients) {
-        List<Client> clientsList = new ArrayList<>(clients);
         double[][] distanceMatrix = new double[clients.size()][clients.size()];
-        for (int i = 0; i < clientsList.size(); i++) {
-            for (int j = 0; j < clientsList.size(); j++) {
+        for (int i = 0; i < clients.size(); i++) {
+            for (int j = 0; j < clients.size(); j++) {
                 if (i == j) {
                     distanceMatrix[i][j] = 0.0;
                 } else {
-                    distanceMatrix[i][j] = clientsList.get(i).getDistanceTo(clientsList.get(j));
+                    distanceMatrix[i][j] = clients.get(i).getDistanceTo(clients.get(j));
                 }
             }
         }
