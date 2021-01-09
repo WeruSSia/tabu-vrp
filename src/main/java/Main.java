@@ -9,8 +9,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader file = getInputFile();
 
-        Set<Vehicle> vehicles = initializeVehicles(file);
-        Set<Client> clients = getClients(file);
+        List<Vehicle> vehicles = initializeVehicles(file);
+        List<Client> clients = getClients(file);
         double[][] distanceMatrix = createDistanceMatrix(clients);
 
         for (Vehicle vehicle : vehicles) {
@@ -18,7 +18,7 @@ public class Main {
         }
 
         for (Client client : clients) {
-            System.out.println(client.getName() + ", " + client.getDemand());
+            System.out.println(client.getId().toString() + ", " + client.getName() + ", " + client.getDemand());
         }
 
         for (int i = 0; i < distanceMatrix.length; i++) {
@@ -28,11 +28,12 @@ public class Main {
             System.out.println();
         }
 
-        System.out.println(new TabuVRP().route(vehicles, clients));
+        TabuVRP tabuVrpInstance = new TabuVRP(vehicles, clients, distanceMatrix);
+        tabuVrpInstance.solve();
     }
 
-    private static Set<Vehicle> initializeVehicles(BufferedReader file) throws IOException {
-        Set<Vehicle> vehicles = new HashSet<>();
+    private static List<Vehicle> initializeVehicles(BufferedReader file) throws IOException {
+        List<Vehicle> vehicles = new ArrayList<>();
         int numberOfVehicles = Integer.parseInt(file.readLine());
         int vehicleCapacity = Integer.parseInt(file.readLine());
         for (int i = 0; i < numberOfVehicles; i++) {
@@ -41,12 +42,14 @@ public class Main {
         return vehicles;
     }
 
-    private static Set<Client> getClients(BufferedReader file) throws IOException {
-        Set<Client> clients = new HashSet<>();
+    private static List<Client> getClients(BufferedReader file) throws IOException {
+        List<Client> clients = new ArrayList<>();
         String line = file.readLine();
+        Integer id = 0;
         while (line != null) {
             String[] clientData = line.split(",");
-            clients.add(new Client(clientData[0], Integer.valueOf(clientData[1]), Double.parseDouble(clientData[2]), Double.parseDouble(clientData[3])));
+            System.out.println(clientData[0]);
+            clients.add(new Client(id++, clientData[0], Integer.valueOf(clientData[1]), Double.parseDouble(clientData[2]), Double.parseDouble(clientData[3])));
             line = file.readLine();
         }
         return clients;
@@ -59,12 +62,16 @@ public class Main {
         return new BufferedReader(new FileReader(fileName));
     }
 
-    private static double[][] createDistanceMatrix(Set<Client> clients) {
+    private static double[][] createDistanceMatrix(List<Client> clients) {
         List<Client> clientsList = new ArrayList<>(clients);
         double[][] distanceMatrix = new double[clients.size()][clients.size()];
         for (int i = 0; i < clientsList.size(); i++) {
             for (int j = 0; j < clientsList.size(); j++) {
-                distanceMatrix[i][j] = clientsList.get(i).getDistanceTo(clientsList.get(j));
+                if (i == j) {
+                    distanceMatrix[i][j] = 0.0;
+                } else {
+                    distanceMatrix[i][j] = clientsList.get(i).getDistanceTo(clientsList.get(j));
+                }
             }
         }
         return distanceMatrix;
