@@ -1,10 +1,9 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class TabuList {
-    private List<Swap> swaps;
-    private int size;
+    private final List<Swap> swaps;
+    private final int size;
 
     public TabuList(int size) {
         this.swaps = new ArrayList<>();

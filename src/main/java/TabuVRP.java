@@ -50,8 +50,10 @@ public class TabuVRP {
         //end at depot
         vehicles.forEach(v -> v.addClient(clients.get(0)));
 
+        //print first solution
+        System.out.println("First random solution: ");
         for (Vehicle vehicle : vehicles) {
-            vehicle.printVisitedClients();
+            System.out.println(vehicle.toString());
         }
 
         //set best solution to first solution
@@ -66,11 +68,14 @@ public class TabuVRP {
         for (int i = 0; i < configuration.getMaximumIterations(); i++) {
             swapTwoRandomClients();
 
-            vehicles.forEach(Vehicle::printVisitedClients);
+//            for (Vehicle vehicle : vehicles) {
+//                System.out.println(vehicle.toString());
+//            }
 
             Double currentFitness = calculateFitness(vehicles);
-            System.out.println("Fitness: " + currentFitness);
-            System.out.println();
+
+//            System.out.println("Fitness: " + currentFitness);
+//            System.out.println();
 
             if (currentFitness < bestFitness) {
                 bestFitness = currentFitness;
@@ -80,7 +85,9 @@ public class TabuVRP {
 
         System.out.println("Best fitness: " + bestFitness + ", ");
         System.out.println("Best solution: ");
-        bestSolution.forEach(Vehicle::printVisitedClients);
+        for (Vehicle vehicle : vehicles) {
+            System.out.println(vehicle.toString());
+        }
     }
 
     private Double calculateFitness(List<Vehicle> vehicles) {
@@ -103,7 +110,7 @@ public class TabuVRP {
             Collections.shuffle(clientsIndexes, random);
             Client client1 = clients.get(clientsIndexes.get(0));
             Client client2 = clients.get(clientsIndexes.get(1));
-            System.out.println(client1.getName() + " | " + client2.getName());
+//            System.out.println(client1.getName() + " | " + client2.getName());
             Swap swap = new Swap(client1, client2, configuration.getCadence());
             if (!tabuList.doesContainSwap(swap)) {
                 Vehicle vehicle1 = getVehicleWithClient(client1);
@@ -112,8 +119,8 @@ public class TabuVRP {
                 if (vehicle1.ifCapacityWillBeExceeded(client1, client2) && vehicle2.ifCapacityWillBeExceeded(client2, client1)) {
                     break;
                 }
-                int client1Index = vehicle1.getClientIndex(client1);
-                int client2Index = vehicle2.getClientIndex(client2);
+                int client1Index = vehicle1.getIndex(client1);
+                int client2Index = vehicle2.getIndex(client2);
                 vehicle1.getVisitedClients().set(client1Index, client2);
                 vehicle2.getVisitedClients().set(client2Index, client1);
                 tabuList.checkSwapsCadence();
@@ -124,8 +131,8 @@ public class TabuVRP {
             tabuList.checkSwapsCadence();
         }
 
-        tabuList.printTabuList();
-        System.out.println();
+//        tabuList.printTabuList();
+//        System.out.println();
     }
 
     private Vehicle getVehicleWithClient(Client client) {

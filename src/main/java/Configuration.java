@@ -1,9 +1,9 @@
 public class Configuration {
 
-    private int maximumIterations;
-    private int tabuListSize;
-    private int cadence;
-    private int randomGeneratorSeed;
+    private final int maximumIterations;
+    private final int tabuListSize;
+    private final int cadence;
+    private final int randomGeneratorSeed;
 
     public Configuration(int maximumIterations, int tabuListSize, int cadence, int randomGeneratorSeed) {
         this.maximumIterations = maximumIterations;

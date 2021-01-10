@@ -2,18 +2,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Vehicle {
-    private final int capacity;
     private int availableCapacity;
-    private List<Client> visitedClients;
+    private final List<Client> visitedClients;
 
     public Vehicle(int capacity) {
-        this.capacity = capacity;
         this.availableCapacity = capacity;
         this.visitedClients = new ArrayList<>();
-    }
-
-    public int getCapacity() {
-        return capacity;
     }
 
     public List<Client> getVisitedClients() {
@@ -24,25 +18,17 @@ public class Vehicle {
         return visitedClients.contains(client);
     }
 
-    public int getClientIndex(Client client) {
+    public int getIndex(Client client) {
         for (int i = 0; i < visitedClients.size(); i++) {
             if (visitedClients.get(i) == client) {
                 return i;
             }
         }
-        throw new RuntimeException();
-    }
-
-    public void printVisitedClients() {
-        for (int i = 0; i < visitedClients.size() - 1; ++i) {
-            System.out.print(visitedClients.get(i).getId().toString() + ":" + visitedClients.get(i).getName() + " -> ");
-        }
-        System.out.print(visitedClients.get(visitedClients.size() - 1).getId().toString() + ":" + visitedClients.get(visitedClients.size() - 1).getName());
-        System.out.println();
+        throw new IllegalStateException();
     }
 
     public boolean addClient(Client client) {
-        if (checkIfEnoughCapacity(client)) {
+        if (this.availableCapacity - client.getDemand() > 0) {
             this.visitedClients.add(client);
             this.availableCapacity -= client.getDemand();
             return true;
@@ -50,11 +36,17 @@ public class Vehicle {
         return false;
     }
 
-    private boolean checkIfEnoughCapacity(Client client) {
-        return this.availableCapacity - client.getDemand() > 0;
-    }
-
     public boolean ifCapacityWillBeExceeded(Client clientToBeRemoved, Client clientToBeAdded) {
         return availableCapacity + clientToBeRemoved.getDemand() - clientToBeAdded.getDemand() < 0;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < visitedClients.size() - 1; ++i) {
+            builder.append(visitedClients.get(i).getId().toString()).append(":").append(visitedClients.get(i).getName()).append(" -> ");
+        }
+        builder.append(visitedClients.get(visitedClients.size() - 1).getId().toString()).append(":").append(visitedClients.get(visitedClients.size() - 1).getName());
+        return builder.toString();
     }
 }

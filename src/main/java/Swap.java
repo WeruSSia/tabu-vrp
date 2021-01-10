@@ -1,8 +1,8 @@
 import java.util.Objects;
 
 public class Swap {
-    private Client client1;
-    private Client client2;
+    private final Client client1;
+    private final Client client2;
 
     public int getCadence() {
         return cadence;

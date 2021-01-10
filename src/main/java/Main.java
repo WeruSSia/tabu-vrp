@@ -13,10 +13,6 @@ public class Main {
         List<Vehicle> vehicles = initializeVehicles(file);
         List<Client> clients = getClients(file);
 
-        for (Client client : clients) {
-            System.out.println(client.getId().toString() + ", " + client.getName() + ", " + client.getDemand());
-        }
-
         new TabuVRP(vehicles, clients, configuration).solve();
     }
 
