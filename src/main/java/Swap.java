@@ -25,7 +25,7 @@ public class Swap {
     }
 
     public int decrementCadence() {
-        return --cadence;
+        return cadence--;
     }
 
     @Override

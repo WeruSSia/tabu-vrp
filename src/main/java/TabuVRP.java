@@ -123,8 +123,8 @@ public class TabuVRP {
                 int client2Index = vehicle2.getIndex(client2);
                 vehicle1.getVisitedClients().set(client1Index, client2);
                 vehicle2.getVisitedClients().set(client2Index, client1);
-                tabuList.checkSwapsCadence();
                 tabuList.addSwap(swap);
+                tabuList.checkSwapsCadence();
                 break;
 
             }
