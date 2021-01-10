@@ -7,18 +7,17 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        BufferedReader file = getInputFile();
+        BufferedReader file = getVRPInputFile();
+        Configuration configuration = getConfiguration();
 
         List<Vehicle> vehicles = initializeVehicles(file);
         List<Client> clients = getClients(file);
-        double[][] distanceMatrix = createDistanceMatrix(clients);
 
         for (Client client : clients) {
             System.out.println(client.getId().toString() + ", " + client.getName() + ", " + client.getDemand());
         }
 
-        TabuVRP tabuVrpInstance = new TabuVRP(vehicles, clients, distanceMatrix);
-        tabuVrpInstance.solve();
+        new TabuVRP(vehicles, clients, configuration).solve();
     }
 
     private static List<Vehicle> initializeVehicles(BufferedReader file) throws IOException {
@@ -34,33 +33,30 @@ public class Main {
     private static List<Client> getClients(BufferedReader file) throws IOException {
         List<Client> clients = new ArrayList<>();
         String line = file.readLine();
-        int id = 0;
-        while (line != null) {
+        for (int id = 0; line != null; id++) {
             String[] clientData = line.split(",");
-            clients.add(new Client(id++, clientData[0], Integer.valueOf(clientData[1]), Double.parseDouble(clientData[2]), Double.parseDouble(clientData[3])));
+            clients.add(new Client(id, clientData[0], Integer.valueOf(clientData[1]), Double.parseDouble(clientData[2]), Double.parseDouble(clientData[3])));
             line = file.readLine();
         }
         return clients;
     }
 
-    private static BufferedReader getInputFile() throws FileNotFoundException {
+    private static BufferedReader getVRPInputFile() throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Input file: ");
+        System.out.println("VRP Input file: ");
         String fileName = scanner.next();
         return new BufferedReader(new FileReader(fileName));
     }
 
-    private static double[][] createDistanceMatrix(List<Client> clients) {
-        double[][] distanceMatrix = new double[clients.size()][clients.size()];
-        for (int i = 0; i < clients.size(); i++) {
-            for (int j = 0; j < clients.size(); j++) {
-                if (i == j) {
-                    distanceMatrix[i][j] = 0.0;
-                } else {
-                    distanceMatrix[i][j] = clients.get(i).getDistanceTo(clients.get(j));
-                }
-            }
-        }
-        return distanceMatrix;
+    private static Configuration getConfiguration() throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Configuration file: ");
+        String fileName = scanner.next();
+        BufferedReader file = new BufferedReader(new FileReader(fileName));
+        int maximumIterations = Integer.parseInt(file.readLine());
+        int tabuListSize = Integer.parseInt(file.readLine());
+        int cadence = Integer.parseInt(file.readLine());
+        int randomGeneratorSeed = Integer.parseInt(file.readLine());
+        return new Configuration(maximumIterations, tabuListSize, cadence, randomGeneratorSeed);
     }
 }
